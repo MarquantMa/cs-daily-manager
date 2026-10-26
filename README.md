@@ -5,7 +5,7 @@
 [![Platform: macOS](https://img.shields.io/badge/Platform-Apple%20Silicon%20(M-Series)-purple.svg)]()
 [![GUI: PyQt6](https://img.shields.io/badge/GUI-PyQt6-green.svg)]()
 [![Model: Whisper MLX](https://img.shields.io/badge/ASR-Whisper%20MLX-blueviolet.svg)]()
-[![Author: Haoran Ma](https://img.shields.io/badge/Author-Haoran%20Ma-orange.svg)](https://github.com/marquant)
+[![Author: Haoran Ma](https://img.shields.io/badge/Author-Haoran%20Ma-orange.svg)](https://github.com/MarquantMa)
 
 ---
 
@@ -71,7 +71,7 @@ cs-daily-manager/
 
 ### Installation
 ```bash
-git clone https://github.com/marquant/cs-daily-manager.git
+git clone https://github.com/MarquantMa/cs-daily-manager.git
 cd cs-daily-manager
 
 # Install dependencies
@@ -92,6 +92,6 @@ python3 src/Manager.py
 ---
 
 ## 6. Author & License
-- **Author:** Haoran Ma (Marquant) ([GitHub @marquant](https://github.com/marquant))
+- **Author:** Haoran Ma (Marquant) ([GitHub @MarquantMa](https://github.com/MarquantMa))
 - **Email:** `marquant_voldemort@icloud.com`
 - **License:** MIT License
