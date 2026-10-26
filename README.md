@@ -93,5 +93,5 @@ python3 src/Manager.py
 
 ## 6. Author & License
 - **Author:** Haoran Ma (Marquant) ([GitHub @MarquantMa](https://github.com/MarquantMa))
-- **Email:** `marquant_voldemort@icloud.com`
+- **Email:** `markma_cd@icloud.com`
 - **License:** MIT License
