@@ -1,0 +1,7 @@
+PyQt6>=6.6.0
+mlx-whisper>=0.2.0
+sounddevice>=0.4.6
+numpy>=1.24.0
+keyring>=24.0.0
+requests>=2.31.0
+huggingface-hub>=0.20.0
