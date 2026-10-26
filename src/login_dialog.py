@@ -4,7 +4,7 @@ import json
 import hashlib
 import secrets
 
-from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
+from PyQt6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel,
                              QLineEdit, QPushButton, QFrame, QMessageBox, QApplication)
 from PyQt6.QtCore import Qt, pyqtSignal, QObject, QTimer, QSize
 from PyQt6.QtGui import QIcon, QPixmap, QFont, QColor
@@ -84,10 +84,10 @@ class TouchIDBridge(QObject):
         try:
             from LocalAuthentication import LAContext, LAPolicyDeviceOwnerAuthenticationWithBiometrics, LAPolicyDeviceOwnerAuthentication
             context = LAContext.alloc().init()
-            
+
             can_bio = AuthManager._parse_eval_res(context.canEvaluatePolicy_error_(LAPolicyDeviceOwnerAuthenticationWithBiometrics, None))
             can_dev = AuthManager._parse_eval_res(context.canEvaluatePolicy_error_(LAPolicyDeviceOwnerAuthentication, None))
-            
+
             if not (can_bio or can_dev):
                 self.failed_signal.emit("Touch ID is not available or configured on this device.")
                 return
@@ -111,13 +111,13 @@ class LoginDialog(QDialog):
         super().__init__(parent)
         self.is_dark_mode = is_dark_mode
         self.is_setup_mode = not AuthManager.is_password_set()
-        
+
         self.touch_bridge = TouchIDBridge()
         self.touch_bridge.success_signal.connect(self.on_touch_success)
         self.touch_bridge.failed_signal.connect(self.on_touch_failed)
-        
+
         self.init_ui()
-        
+
         # Auto-trigger Touch ID if available and not in initial setup mode
         if not self.is_setup_mode and AuthManager.is_touch_id_available():
             QTimer.singleShot(400, self.prompt_touch_id)
@@ -126,20 +126,20 @@ class LoginDialog(QDialog):
         self.setWindowTitle("Security Authentication - AI Daily Assistant")
         self.setFixedSize(460, 560)
         self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.CustomizeWindowHint | Qt.WindowType.WindowCloseButtonHint)
-        
+
         icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "app_icon.png")
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
-            
+
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(32, 32, 32, 32)
         main_layout.setSpacing(18)
-        
+
         # 1. Header Card (App Icon + Title)
         header_layout = QVBoxLayout()
         header_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         header_layout.setSpacing(8)
-        
+
         icon_label = QLabel()
         icon_label.setFixedSize(72, 72)
         if os.path.exists(icon_path):
@@ -149,23 +149,23 @@ class LoginDialog(QDialog):
             icon_label.setText("Login")
             icon_label.setStyleSheet("font-size: 20px; font-weight: bold; color: #38BDF8;")
         icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         title_label = QLabel("AI Daily Assistant")
         title_label.setObjectName("app_title")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         subtitle_text = "Create Master Password" if self.is_setup_mode else "Protected Session • Please Unlock"
         self.subtitle_label = QLabel(subtitle_text)
         self.subtitle_label.setObjectName("app_subtitle")
         self.subtitle_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         header_layout.addWidget(icon_label, 0, Qt.AlignmentFlag.AlignCenter)
         header_layout.addWidget(title_label)
         header_layout.addWidget(self.subtitle_label)
         main_layout.addLayout(header_layout)
-        
+
         main_layout.addSpacing(10)
-        
+
         # 2. Touch ID Section (if available and not setup mode)
         if not self.is_setup_mode and AuthManager.is_touch_id_available():
             self.touch_btn = QPushButton("Unlock with Touch ID")
@@ -174,7 +174,7 @@ class LoginDialog(QDialog):
             self.touch_btn.setCursor(Qt.CursorShape.PointingHandCursor)
             self.touch_btn.clicked.connect(self.prompt_touch_id)
             main_layout.addWidget(self.touch_btn)
-            
+
             divider_layout = QHBoxLayout()
             divider_layout.setContentsMargins(0, 6, 0, 6)
             line1 = QFrame()
@@ -186,36 +186,36 @@ class LoginDialog(QDialog):
             or_label = QLabel("OR ENTER PASSWORD")
             or_label.setObjectName("or_label")
             or_label.setStyleSheet("color: #94A3B8; font-size: 12px; font-weight: bold;")
-            
+
             divider_layout.addWidget(line1)
             divider_layout.addWidget(or_label)
             divider_layout.addWidget(line2)
             main_layout.addLayout(divider_layout)
-            
+
         # 3. Password Input Section
         pwd_box = QVBoxLayout()
         pwd_box.setSpacing(12)
-        
+
         pwd_input_layout = QHBoxLayout()
         pwd_input_layout.setSpacing(0)
-        
+
         self.pwd_field = QLineEdit()
         self.pwd_field.setPlaceholderText("Enter master password..." if not self.is_setup_mode else "Create master password...")
         self.pwd_field.setEchoMode(QLineEdit.EchoMode.Password)
         self.pwd_field.setFixedHeight(48)
         self.pwd_field.returnPressed.connect(self.on_submit_password)
-        
+
         self.toggle_eye_btn = QPushButton("Show")
         self.toggle_eye_btn.setFixedSize(60, 48)
         self.toggle_eye_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.toggle_eye_btn.setToolTip("Show/Hide Password")
         self.toggle_eye_btn.clicked.connect(self.toggle_password_visibility)
         self.toggle_eye_btn.setObjectName("eye_btn")
-        
+
         pwd_input_layout.addWidget(self.pwd_field)
         pwd_input_layout.addWidget(self.toggle_eye_btn)
         pwd_box.addLayout(pwd_input_layout)
-        
+
         # Confirm password field if setup mode
         if self.is_setup_mode:
             self.confirm_pwd_field = QLineEdit()
@@ -224,16 +224,16 @@ class LoginDialog(QDialog):
             self.confirm_pwd_field.setFixedHeight(48)
             self.confirm_pwd_field.returnPressed.connect(self.on_submit_password)
             pwd_box.addWidget(self.confirm_pwd_field)
-            
+
         main_layout.addLayout(pwd_box)
-        
+
         # Error / Status Label
         self.status_msg = QLabel("")
         self.status_msg.setObjectName("status_msg")
         self.status_msg.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_msg.setWordWrap(True)
         main_layout.addWidget(self.status_msg)
-        
+
         # Action Submit Button
         btn_text = "Set Password & Unlock" if self.is_setup_mode else "Unlock Assistant"
         self.submit_btn = QPushButton(btn_text)
@@ -242,9 +242,9 @@ class LoginDialog(QDialog):
         self.submit_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.submit_btn.clicked.connect(self.on_submit_password)
         main_layout.addWidget(self.submit_btn)
-        
+
         main_layout.addStretch()
-        
+
         self.apply_theme()
 
     def toggle_password_visibility(self):
@@ -278,7 +278,7 @@ class LoginDialog(QDialog):
 
     def on_submit_password(self):
         pwd = self.pwd_field.text().strip()
-        
+
         if self.is_setup_mode:
             confirm_pwd = self.confirm_pwd_field.text().strip()
             if not pwd:
@@ -290,7 +290,7 @@ class LoginDialog(QDialog):
             if pwd != confirm_pwd:
                 self.show_error("Passwords do not match.")
                 return
-                
+
             if AuthManager.set_password(pwd):
                 self.status_msg.setStyleSheet("color: #30D158; font-size: 14px; font-weight: bold;")
                 self.status_msg.setText("Master Password Created!")

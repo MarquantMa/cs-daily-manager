@@ -27,9 +27,9 @@ def query_mlx(prompt, model_repo="mlx-community/Qwen2.5-7B-Instruct-4bit"):
     if model_repo not in _mlx_cache:
         print(f"Loading native Apple MLX model '{model_repo}' in Python...")
         _mlx_cache[model_repo] = load(model_repo)
-    
+
     model, tokenizer = _mlx_cache[model_repo]
-    
+
     if hasattr(tokenizer, "apply_chat_template"):
         messages = [{"role": "user", "content": prompt}]
         try:
@@ -38,13 +38,13 @@ def query_mlx(prompt, model_repo="mlx-community/Qwen2.5-7B-Instruct-4bit"):
             formatted_prompt = prompt
     else:
         formatted_prompt = prompt
-        
+
     return generate(model, tokenizer, prompt=formatted_prompt, max_tokens=4096, verbose=False)
 
 def query_ai(prompt, model_key="Smart Auto-Select"):
     deepseek_key = os.getenv("DEEPSEEK_API_KEY", "")
     silicon_key = os.getenv("SILICONFLOW_API_KEY", deepseek_key)
-    
+
     if model_key == "Smart Auto-Select":
         model_key = "Deepseek V4 flash"
 
@@ -166,7 +166,7 @@ def get_system_context():
     day_name = now.strftime("%A")
     date_str = now.strftime("%Y-%m-%d")
     time_str = now.strftime("%I:%M %p (%H:%M)")
-    
+
     location_str = "Philadelphia, United States"
     try:
         project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -190,13 +190,13 @@ def extract_todo(text, model_key="Qwen 3.5 9B (Mac Native MLX)"):
     context = get_system_context()
     prompt = f"""{context}
 
-Extract a structured todo list from the following text. 
+Extract a structured todo list from the following text.
 Only include tasks with their time details and notes.
-Format the output as a clean list, without extra prompts or details. 
-I want you to extract the todo list in a clean format as follows: 
+Format the output as a clean list, without extra prompts or details.
+I want you to extract the todo list in a clean format as follows:
 
 Time:
-Event: 
+Event:
 Notes:
 
 Arrange the todo list in the order of time.
@@ -215,7 +215,7 @@ def extract_calendar_event(text, model_key="Smart Auto-Select"):
     prompt = f"""{context}
 
 Extract ALL event and task/reminder details from this text for system calendar or reminder entries (either adding new items or updating existing ones).
-Output ONLY a JSON LIST of objects with these keys: 
+Output ONLY a JSON LIST of objects with these keys:
 - "item_type": "calendar" for scheduled events/meetings/appointments with specific time bounds, OR "reminder" for to-dos, tasks, or reminders without fixed event duration.
 - "action": "add" or "update" (use "update" if text explicitly asks to change, move, update, reschedule, or modify an existing item)
 - "title": (the title of the event or reminder)
@@ -256,7 +256,7 @@ def suggest_calendar(title, notes, calendar_list):
     """
     if not calendar_list:
         return "Calendar"
-    
+
     calendars_str = ", ".join(calendar_list)
     prompt = f"""You are a smart calendar organizer.
 Given the following event details:
@@ -267,21 +267,21 @@ And a list of available Apple Calendar names in the system: [{calendars_str}]
 
 Which calendar from the list is the best fit for this event? Select exactly one calendar name from the list.
 Return ONLY the selected calendar name from the list, with no extra formatting, quotes, or explanation."""
-    
+
     suggestion = query_ai(prompt, model_key="Deepseek V4 flash")
     suggested = suggestion.strip().strip('"').strip("'").strip()
-    
+
     if suggested in calendar_list:
         return suggested
-        
+
     for cal in calendar_list:
         if cal.lower() == suggested.lower():
             return cal
-            
+
     for cal in calendar_list:
         if cal.lower() in suggested.lower() or suggested.lower() in cal.lower():
             return cal
-            
+
     return calendar_list[0]
 
 def suggest_reminder_list(title, notes, list_names):

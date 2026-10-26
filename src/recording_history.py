@@ -8,7 +8,7 @@ METADATA_FILE = os.path.join(RECORDINGS_DIR, "metadata.json")
 
 def get_recordings_history():
     """
-    Loads all recorded audio metadata. Also scans recordings/ directory for any WAV/audio files 
+    Loads all recorded audio metadata. Also scans recordings/ directory for any WAV/audio files
     that might be missing from metadata.json, guaranteeing zero lost recordings.
     Returns list of dicts ordered by newest first.
     """
@@ -61,7 +61,7 @@ def add_or_update_recording(file_path, transcription=None, mode=None, status=Non
     history = get_recordings_history()
     filename = os.path.basename(file_path)
     found = False
-    
+
     for entry in history:
         if entry.get("file_path") == file_path or entry.get("filename") == filename:
             found = True
@@ -72,7 +72,7 @@ def add_or_update_recording(file_path, transcription=None, mode=None, status=Non
             if status is not None:
                 entry["status"] = status
             break
-            
+
     if not found:
         mtime = os.path.getmtime(file_path) if os.path.exists(file_path) else datetime.now().timestamp()
         dt_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")

@@ -18,7 +18,7 @@ def get_model():
                 torch.set_num_threads(2)
             except Exception:
                 pass
-            
+
             import whisper
             device = "cpu"
             print(f"Loading Whisper model (small) on {device}...")
@@ -28,7 +28,7 @@ def get_model():
 def transcribe(file_path):
     if not os.path.exists(file_path):
         return "Error: File not found."
-    
+
     with _model_lock:
         try:
             model = get_model()

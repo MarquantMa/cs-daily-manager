@@ -20,12 +20,12 @@ def add_calendar_event(title, start_time, end_time, notes="", calendar_name="Cal
             set day of d to {dt.day}
             set time of d to {time_in_seconds}
         '''
-        
+
     # Escape double quotes in title/notes for AppleScript
     title = str(title).replace('"', '\\"')
     notes = str(notes).replace('"', '\\"')
     calendar_name = str(calendar_name).strip().replace('"', '\\"')
-    
+
     script = f'''
     tell application "Calendar"
         set targetCal to missing value
@@ -35,7 +35,7 @@ def add_calendar_event(title, start_time, end_time, notes="", calendar_name="Cal
                 set targetCal to c
             end if
         end try
-        
+
         if targetCal is missing value then
             repeat with c in calendars
                 try
@@ -46,25 +46,25 @@ def add_calendar_event(title, start_time, end_time, notes="", calendar_name="Cal
                 end try
             end repeat
         end if
-        
+
         if targetCal is missing value then
             set targetCal to first calendar
         end if
-        
+
         -- Create start date object
         {script_date(start_time)}
         set startDate to d
-        
+
         -- Create end date object
         {script_date(end_time)}
         set endDate to d
-        
+
         tell targetCal
             make new event with properties {{summary:"{title}", start date:startDate, end date:endDate, description:"{notes}"}}
         end tell
     end tell
     '''
-    
+
     try:
         subprocess.run(["osascript", "-e", script], capture_output=True, text=True, check=True, timeout=10)
         return True, None
@@ -303,7 +303,7 @@ def update_calendar_event(old_title=None, old_start=None, new_title=None, new_st
     clean_new_title = str(updated_title).replace('"', '\\"')
     clean_notes = str(updated_notes).replace('"', '\\"')
     calendar_name = str(calendar_name).strip().replace('"', '\\"')
-    
+
     script = f'''
     tell application "Calendar"
         try
@@ -311,12 +311,12 @@ def update_calendar_event(old_title=None, old_start=None, new_title=None, new_st
         on error
             set theCalendar to first calendar
         end try
-        
+
         {script_date(updated_start)}
         set newStart to d
         {script_date(updated_end)}
         set newEnd to d
-        
+
         set evs to (every event of theCalendar whose summary is "{clean_old_title}")
         if (count of evs) > 0 then
             set theEvent to first item of evs

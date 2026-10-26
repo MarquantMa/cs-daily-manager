@@ -47,11 +47,11 @@ class ManagerApp(QWidget):
     def init_ui(self):
         self.check_dependencies()
         self.setWindowTitle("AI Daily Assistant")
-        
+
         icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "app_icon.png")
         if os.path.exists(icon_path):
             self.setWindowIcon(QIcon(icon_path))
-            
+
         self.setMinimumSize(1020, 700)
         self.resize(1200, 820)
 
@@ -272,7 +272,7 @@ class ManagerApp(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    
+
     # Global modern readable font
     default_font = QFont("SF Pro Text", 14)
     default_font.setStyleHint(QFont.StyleHint.SansSerif)

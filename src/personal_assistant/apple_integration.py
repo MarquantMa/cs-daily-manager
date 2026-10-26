@@ -82,7 +82,7 @@ def get_unread_emails():
                     set output to output & "Sender: " & extract address from sender of msg & "\\n"
                     set output to output & "Content: " & content of msg & "\\n---\\n"
                     set counter to counter + 1
-                    
+
                     -- Mark as read so we don't process it again next time
                     set read status of msg to true
                 end if

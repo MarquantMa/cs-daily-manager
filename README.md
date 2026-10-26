@@ -1,4 +1,4 @@
-# AI Daily Manager (macOS Workstation) 🎙️📅
+# AI Daily Manager (macOS Workstation)
 > **Five-Layer Sub-Second Speech-to-Calendar Orchestration on Apple Silicon (MLX Whisper + Native AppleScript IPC)**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)

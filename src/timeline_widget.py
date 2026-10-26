@@ -20,14 +20,14 @@ class CalendarTimelineViewWidget(QWidget):
         self.table.setHorizontalHeaderLabels(["Type", "Title", "Time Slot", "Status", "Duration"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-        
+
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setShowGrid(False)
         self.table.verticalHeader().setVisible(False)
-        
+
         layout.addWidget(self.table)
-        
+
         self.time_timer = QTimer(self)
         self.time_timer.timeout.connect(self.update_layout)
         self.time_timer.start(60000)
@@ -83,7 +83,7 @@ class CalendarTimelineViewWidget(QWidget):
     def update_layout(self):
         self.table.setRowCount(0)
         now = datetime.now()
-        
+
         for ev in self.events:
             title = ev.get('title', 'Event')
             start_iso = ev.get('start_iso', '')
@@ -149,7 +149,7 @@ class CalendarTimelineViewWidget(QWidget):
                 status_item.setForeground(QColor("#FFD60A"))
             elif status == "Finished":
                 status_item.setForeground(QColor("#8E8E93"))
-            
+
             if is_rem:
                 type_item.setForeground(QColor("#38BDF8"))
             else:
@@ -164,7 +164,7 @@ class CalendarTimelineViewWidget(QWidget):
             self.table.setItem(row, 2, time_item)
             self.table.setItem(row, 3, status_item)
             self.table.setItem(row, 4, dur_item)
-            
+
             # Alternate row colors
             if row % 2 == 1:
                 bg_c = QColor(255, 255, 255, 10) if self.is_dark_mode else QColor(0, 0, 0, 10)

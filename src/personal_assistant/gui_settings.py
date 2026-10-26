@@ -37,23 +37,23 @@ class TimetableGUI:
         ttk.Label(root, text="Class Hours (HH:MM-HH:MM)").grid(row=0, column=2, padx=5, pady=5)
 
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        
+
         for i, day in enumerate(days):
             ttk.Label(root, text=day).grid(row=i+1, column=0, padx=5, pady=5)
-            
+
             sleep_entry = ttk.Entry(root)
             sleep_entry.insert(0, self.settings.get(day, {}).get("sleep", ""))
             sleep_entry.grid(row=i+1, column=1, padx=5, pady=5)
-            
+
             class_entry = ttk.Entry(root)
             class_entry.insert(0, self.settings.get(day, {}).get("class", ""))
             class_entry.grid(row=i+1, column=2, padx=5, pady=5)
-            
+
             self.entries[day] = {"sleep": sleep_entry, "class": class_entry}
 
         save_btn = ttk.Button(root, text="Save Settings", command=self.save)
         save_btn.grid(row=8, column=0, columnspan=3, pady=10)
-        
+
         self.status_label = ttk.Label(root, text="")
         self.status_label.grid(row=9, column=0, columnspan=3)
 

@@ -20,7 +20,7 @@ class SettingsDialog(QDialog):
         self.is_dark_mode = is_dark_mode
         self.current_model = current_model
         self.bg_image_path = bg_image_path
-        
+
         self.load_current_settings()
         self.init_ui()
         self.apply_theme()

@@ -144,7 +144,7 @@ class WeatherWorker(QThread):
             hourly = w_data.get("hourly", {})
             times = hourly.get("time", [])
             probs = hourly.get("precipitation_probability", [])
-            
+
             now_iso = datetime.now().strftime("%Y-%m-%dT%H:00")
             curr_idx = 0
             for idx, t in enumerate(times):
@@ -329,7 +329,7 @@ class SmoothScrollArea(QScrollArea):
 class Dashboard(QWidget):
     open_history_signal = pyqtSignal()
     theme_toggled_signal = pyqtSignal(bool)
-    
+
     # Thread-safe GUI dispatcher signals
     sig_update_status = pyqtSignal(str)
     sig_update_output = pyqtSignal(str, str, str)  # (result, mode, source_file)
@@ -342,7 +342,7 @@ class Dashboard(QWidget):
         self.is_dark_mode = True
         self.current_displayed_events = []
         self.current_weather_data = None
-        
+
         # Audio & Processing State
         self.recorder = Recorder()
         self.is_recording = False
@@ -352,7 +352,7 @@ class Dashboard(QWidget):
         self.is_batch_processing = False
         self.last_source_file = None
         self.transcription_lock = threading.Lock()
-        
+
         self._cached_bg_path = None
         self._cached_bg_size = None
         self._cached_bg_is_dark = None
@@ -360,7 +360,7 @@ class Dashboard(QWidget):
 
         self.load_settings()
         self.init_ui()
-        
+
         # Connect thread-safe dispatcher signals to GUI handlers
         self.sig_update_status.connect(self.status_label.setText, Qt.ConnectionType.QueuedConnection)
         self.sig_update_output.connect(self.on_transcription_result, Qt.ConnectionType.QueuedConnection)
@@ -480,11 +480,11 @@ class Dashboard(QWidget):
         main_scroll.setStyleSheet("QScrollArea#main_scroll { background: transparent; border: none; }")
         main_scroll.viewport().setStyleSheet("background: transparent;")
         main_scroll.verticalScrollBar().setSingleStep(14)
-        
+
         scroll_widget = QWidget()
         scroll_widget.setObjectName("scroll_widget")
         scroll_widget.setStyleSheet("QWidget#scroll_widget { background: transparent; }")
-        
+
         layout = QVBoxLayout(scroll_widget)
         layout.setContentsMargins(16, 14, 16, 16)
         layout.setSpacing(16)
@@ -493,19 +493,19 @@ class Dashboard(QWidget):
         # 1. Sleek Header (App Title, Date, Action Buttons)
         # -------------------------------------------------------------
         header_layout = QHBoxLayout()
-        
+
         title_vbox = QVBoxLayout()
         title_vbox.setSpacing(2)
-        
+
         self.title_label = QLabel("AI Daily Assistant")
         self.title_label.setObjectName("app_title_label")
         self.title_label.setStyleSheet("font-size: 28px; font-weight: 800; letter-spacing: -0.5px;")
-        
+
         today_date_str = datetime.now().strftime("%A, %B %d, %Y")
         self.date_label = QLabel(today_date_str)
         self.date_label.setObjectName("date_subtitle_label")
         self.date_label.setStyleSheet("font-size: 15px; color: #94A3B8; font-weight: 500;")
-        
+
         title_vbox.addWidget(self.title_label)
         title_vbox.addWidget(self.date_label)
         header_layout.addLayout(title_vbox)
@@ -544,19 +544,19 @@ class Dashboard(QWidget):
         # -------------------------------------------------------------
         row1_layout = QHBoxLayout()
         row1_layout.setSpacing(16)
-        
+
         # Weather Card (QGroupBox)
         self.weather_card = QGroupBox("LIVE WEATHER && ENVIRONMENT")
         self.weather_card.setObjectName("weather_card")
         self.weather_card.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.weather_card.setMinimumHeight(210)
-        
+
         wc_layout = QVBoxLayout(self.weather_card)
         wc_layout.setContentsMargins(20, 20, 20, 18)
-        
+
         self.city_label = QLabel("Detecting Location...")
         self.city_label.setObjectName("city_label")
-        
+
         temp_center_layout = QHBoxLayout()
         self.icon_label = QLabel("Clear")
         self.icon_label.setObjectName("icon_label")
@@ -566,18 +566,18 @@ class Dashboard(QWidget):
         temp_center_layout.addSpacing(14)
         temp_center_layout.addWidget(self.icon_label)
         temp_center_layout.addStretch()
-        
+
         stats_layout = QHBoxLayout()
         stats_layout.setSpacing(12)
         self.aqi_label = QLabel("AQI: --")
         self.aqi_label.setObjectName("badge_label")
-        
+
         self.uv_label = QLabel("UV: --")
         self.uv_label.setObjectName("badge_label")
 
         self.rain_label = QLabel("Rain: --%")
         self.rain_label.setObjectName("badge_label")
-        
+
         stats_layout.addWidget(self.aqi_label)
         stats_layout.addWidget(self.uv_label)
         stats_layout.addWidget(self.rain_label)
@@ -594,10 +594,10 @@ class Dashboard(QWidget):
         self.sugg_card.setObjectName("sugg_card")
         self.sugg_card.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.sugg_card.setMinimumHeight(210)
-        
+
         sc_layout = QVBoxLayout(self.sugg_card)
         sc_layout.setContentsMargins(20, 20, 20, 18)
-        
+
         advice_header = QHBoxLayout()
         advice_header.addStretch()
 
@@ -621,12 +621,12 @@ class Dashboard(QWidget):
         """)
         advice_header.addWidget(self.refresh_advice_btn)
         sc_layout.addLayout(advice_header)
-        
+
         self.sugg_text = QLabel("Analyzing real-time weather, rain forecast and your schedule...")
         self.sugg_text.setObjectName("sugg_text")
         self.sugg_text.setWordWrap(True)
         self.sugg_text.setStyleSheet("font-size: 16px; line-height: 1.5; background-color: transparent;")
-        
+
         sc_layout.addWidget(self.sugg_text)
         sc_layout.addStretch()
 
@@ -640,7 +640,7 @@ class Dashboard(QWidget):
         self.voice_card = QGroupBox("VOICE ASSISTANT && SMART TRANSCRIPTION ENGINE")
         self.voice_card.setObjectName("voice_card")
         self.voice_card.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
-        
+
         voice_layout = QVBoxLayout(self.voice_card)
         voice_layout.setContentsMargins(20, 22, 20, 18)
         voice_layout.setSpacing(14)
@@ -750,7 +750,7 @@ class Dashboard(QWidget):
         self.cal_type_combo.addItems(["Calendar Event", "Reminder"])
         self.cal_type_combo.currentIndexChanged.connect(self.on_item_type_changed)
         type_row.addWidget(self.cal_type_combo)
-        
+
         self.cal_sel_label = QLabel("Add to Calendar:")
         self.cal_sel_label.setStyleSheet("font-size: 15px; font-weight: bold;")
         self.cal_calendar_combo = QComboBox()
@@ -937,7 +937,7 @@ class Dashboard(QWidget):
         cal_header_layout.addWidget(self.add_manual_event_btn)
         cal_header_layout.addWidget(self.refresh_cal_btn)
         sched_layout.addLayout(cal_header_layout)
-        
+
         self.cal_container = QFrame()
         self.cal_container.setObjectName("cal_container")
         self.cal_layout = QVBoxLayout()
@@ -1405,7 +1405,7 @@ class Dashboard(QWidget):
         now_ts = time.time()
         project_dir = os.path.dirname(os.path.abspath(__file__))
         cache_file = os.path.join(project_dir, "exports", "dashboard_cache.json")
-        
+
         cache_data = {}
         if os.path.exists(cache_file):
             try:
@@ -1449,12 +1449,12 @@ class Dashboard(QWidget):
                     cache_data = json.load(f)
             except Exception:
                 cache_data = {}
-        
+
         cache_data[key] = value
         cache_data[f"{key}_ts"] = time.time()
         if extra_keys:
             cache_data.update(extra_keys)
-            
+
         try:
             os.makedirs(os.path.dirname(cache_file), exist_ok=True)
             with open(cache_file, "w") as f:
@@ -1477,7 +1477,7 @@ class Dashboard(QWidget):
         temp_val = str(data['temp']).replace('°C', '').strip()
         self.temp_label.setText(f"{temp_val}°C")
         self.icon_label.setText(get_weather_condition_text(data['code']))
-        
+
         try:
             aqi = int(data.get('aqi', 0))
         except (ValueError, TypeError):
@@ -1485,9 +1485,9 @@ class Dashboard(QWidget):
         aqi_color = "#2ECC71" if aqi < 50 else "#F1C40F" if aqi < 100 else "#E74C3C"
         self.aqi_label.setText(f"AQI: {aqi}")
         self.aqi_label.setStyleSheet(f"background-color: rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 6px 12px; font-weight: bold; font-size: 14px; color: {aqi_color};")
-        
+
         self.uv_label.setText(f"UV: {data.get('uv', 0)}")
-        
+
         rain_prob = data.get('rain_prob_3h', 0)
         self.rain_label.setText(f"Rain: {rain_prob}% (3h)")
 
@@ -1655,10 +1655,10 @@ class Dashboard(QWidget):
                 circle_btn.setFixedSize(22, 22)
                 circle_btn.setCursor(Qt.CursorShape.PointingHandCursor)
                 circle_btn.setToolTip("Click to toggle completion")
-                
+
                 def set_btn_style(b, done):
                     if done:
-                        b.setText("✓")
+                        b.setText("")
                         b.setStyleSheet("""
                             QPushButton {
                                 border: 2px solid #30D158;
@@ -1684,7 +1684,7 @@ class Dashboard(QWidget):
                         """)
 
                 set_btn_style(circle_btn, False)
-                
+
                 raw_title = ev['title'].strip()
                 if "] " in raw_title:
                     raw_title = raw_title.split("] ", 1)[1].strip()
@@ -1770,7 +1770,7 @@ class Dashboard(QWidget):
             rem_header_layout = QHBoxLayout()
             rem_header = QLabel(f"REMINDERS & TASKS ({len(reminders)})")
             rem_header.setStyleSheet("font-size: 14px; font-weight: bold; color: #38BDF8; margin-top: 14px; margin-bottom: 4px;" if getattr(self, 'is_dark_mode', True) else "font-size: 14px; font-weight: bold; color: #0284c7; margin-top: 14px; margin-bottom: 4px;")
-            
+
             batch_btn = QPushButton("Complete All Reminders")
             batch_btn.setCursor(Qt.CursorShape.PointingHandCursor)
             batch_btn.setStyleSheet("""
@@ -1917,7 +1917,7 @@ class Dashboard(QWidget):
                 todo_list = extract_todo(text, model_key)
                 formatted_output = f"EXTRACTED TASKS & TO-DOs:\n{todo_list}\n\n" + "="*40 + f"\nORIGINAL TRANSCRIPT:\n{text}"
                 self.sig_update_output.emit(formatted_output, mode, source_file or "")
-                
+
                 self.sig_update_status.emit("Status: Checking calendar events...")
                 events_json = extract_calendar_event(text, model_key)
                 self.sig_process_events.emit(events_json or "[]", text)

@@ -23,7 +23,7 @@ class RecordingHistoryDialog(QDialog):
         self.signals = TranscribeWorkerSignals()
         self.signals.finished.connect(self.on_transcription_finished)
         self.signals.error.connect(self.on_transcription_error)
-        
+
         self.setWindowTitle("Audio Recording History")
         self.setMinimumSize(920, 600)
         self.apply_theme()
@@ -148,7 +148,7 @@ class RecordingHistoryDialog(QDialog):
         left_lbl = QLabel("Saved Audio Files:")
         left_lbl.setStyleSheet("font-weight: bold; font-size: 15px;")
         left_layout.addWidget(left_lbl)
-        
+
         self.list_widget = QListWidget()
         self.list_widget.currentItemChanged.connect(self.on_recording_selected)
         left_layout.addWidget(self.list_widget)
@@ -175,7 +175,7 @@ class RecordingHistoryDialog(QDialog):
         btn_layout1 = QHBoxLayout()
         self.play_btn = QPushButton("Play Audio")
         self.play_btn.clicked.connect(self.play_audio)
-        
+
         self.transcribe_btn = QPushButton("Transcribe / Re-Transcribe")
         self.transcribe_btn.setStyleSheet("background-color: #007AFF; color: white; font-size: 14px; font-weight: bold; padding: 10px 18px;")
         self.transcribe_btn.clicked.connect(self.start_transcription)
@@ -206,7 +206,7 @@ class RecordingHistoryDialog(QDialog):
     def load_history(self):
         self.list_widget.clear()
         self.recordings = get_recordings_history()
-        
+
         if not self.recordings:
             item = QListWidgetItem("No audio recordings found")
             item.setFlags(Qt.ItemFlag.NoItemFlags)
@@ -220,7 +220,7 @@ class RecordingHistoryDialog(QDialog):
             timestamp = rec.get("timestamp", "")
             has_tx = bool(rec.get("transcription", "").strip())
             status_tag = "Transcribed" if has_tx else "Recorded"
-            
+
             display_text = f"{filename}\n   {timestamp} | [{status_tag}]"
             item = QListWidgetItem(display_text)
             item.setData(Qt.ItemDataRole.UserRole, rec)
@@ -287,7 +287,7 @@ class RecordingHistoryDialog(QDialog):
         self.transcribe_btn.setEnabled(True)
         self.transcribe_btn.setText("Transcribe / Re-Transcribe")
         self.transcription_edit.setText(text)
-        
+
         # Permanently store transcription in metadata.json!
         save_transcription(file_path, text)
         QMessageBox.information(self, "Transcription Saved", "Transcription completed and permanently saved to history!")
@@ -309,7 +309,7 @@ class RecordingHistoryDialog(QDialog):
         file_path = self.current_recording.get("file_path", "")
         # Save any manually edited text back to metadata
         save_transcription(file_path, text)
-        
+
         # Emit signal to parent ManagerApp to process events
         self.process_transcription_requested.emit(text, file_path)
         self.accept()

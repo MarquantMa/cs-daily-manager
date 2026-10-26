@@ -16,7 +16,7 @@ class Recorder:
         self.temp_filename = None
         self._record_thread_handle = None
         self._lock = threading.Lock()
-        
+
         # Register exit hook to handle sudden interpreter terminations
         atexit.register(self.cleanup_on_exit)
 
@@ -26,7 +26,7 @@ class Recorder:
                 return
             self.recording = True
             self.frames = []
-            
+
             try:
                 project_dir = os.path.dirname(os.path.abspath(__file__))
                 recordings_dir = os.path.join(project_dir, "recordings")
